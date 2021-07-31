@@ -7,25 +7,22 @@ from ipaddress import IPv4Network
 #from requests.packages.urllib3.exceptions import InsecureRequestWarning
 #requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-result=[]
-VCO_URL = input("VCO URL： ")
-username = input("Account: ")
-password = input("Password: ")
-#admin_username = "addroute@vmware.com"
-#admin_password = "Velocloud123@"
-csv_file = r"C:\Users\raynorl\PycharmProjects\Add CN Routes on VCE\venv\china_ip_list.csv"
+## 输入相关信息
+VCO_URL = ""
+username = ""
+password = ""
+csv_file = "china_ip_list.csv"
 
 # Login
 client = cl.VcoRequestManager(VCO_URL, verify_ssl=True)
 client.authenticate(username, password, is_operator=False)
 
-#def read_csv(csv_file):
+result=[]
 with open(csv_file, "rt") as f:
     reader = csv.reader(f)
+    ## 将文件读取成为字典
     dict_reader = csv.DictReader(f)
-  #    print(dict_reader)
-  #    for i in dict_reader:
-  #        print(i)
+
     for row in dict_reader:
         dict={}
         for key,value in row.items():
@@ -34,9 +31,7 @@ with open(csv_file, "rt") as f:
             else:
                 dict[key] = value
         result.append(dict)
-    #print("%s/%s" % (result[0]['ip'],result[1]['prefix']))
-    #print(len(result))
-    print(len(result)//255+1)
+
 
 all_data=[]
 for i in range(0, len(result)):
@@ -60,3 +55,4 @@ for i in range(0, len(all_data), 255):
     })
     print("Success Create CN Route Group %s" % j)
     j = j+1
+
